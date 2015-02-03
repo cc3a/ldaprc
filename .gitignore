@@ -1,0 +1,26 @@
+# Editor temp files
+*~
+.*.sw?
+*.kate-swp
+.~lock.*.od?#
+
+*.py[co]
+
+# virtualenv
+bdist
+bin
+contrib
+dist
+*.egg-info
+get-pip.py
+include
+lib
+lib64
+local
+passwords
+pip-selfcheck.json
+pyvenv.cfg
+sdist
+share
+src
+
