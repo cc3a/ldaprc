@@ -7,11 +7,11 @@
 *.py[co]
 
 # virtualenv
+build
 bdist
 bin
 contrib
 dist
-*.egg-info
 get-pip.py
 include
 lib
@@ -24,3 +24,7 @@ sdist
 share
 src
 
+.coverage
+.tox
+*.egg
+*.egg-info

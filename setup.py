@@ -13,6 +13,7 @@ import os
 import sys
 import codecs
 import re
+import shlex
 
 try:
     from configparser import RawConfigParser
@@ -50,11 +51,11 @@ for line in tox.get('testenv', 'x_tests_require').split('\n'):
         TESTS_REQUIRE.append(dep)
 
 class PyTest(TestCommand):
-    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
+    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test (see '-a --help' for more)")]
 
     def initialize_options(self):
         TestCommand.initialize_options(self)
-        self.pytest_args = []
+        self.pytest_args = None
 
     def finalize_options(self):
         TestCommand.finalize_options(self)
@@ -64,8 +65,29 @@ class PyTest(TestCommand):
     def run_tests(self):
         # Now install_requires are ready:
         import pytest
-        errno = pytest.main(self.pytest_args)
-        sys.exit(errno)
+        if self.pytest_args:
+            sys.exit(pytest.main(args=shlex.split(self.pytest_args)))
+        sys.exit(pytest.main(args=[]))
+
+
+class ToxTest(TestCommand):
+    user_options = [('tox-args=', 'a', "Arguments to pass to tox (see '-a --help' for more)")]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.tox_args = None
+
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        # Now install_requires are ready:
+        import tox
+        if self.tox_args:
+            sys.exit(tox.cmdline(args=shlex.split(self.tox_args)))
+        sys.exit(tox.cmdline(args=(os.path.join(pth, 'ldaprc', 'tests'),)))
 
 
 setup(name='ldaprc',
@@ -82,8 +104,12 @@ setup(name='ldaprc',
     tests_require=TESTS_REQUIRE,
     cmdclass={
         "test": PyTest,
+        "tox": ToxTest,
     },
-    include_package_data=True,
+    # For sdist see MANIFEST.in, this is for bdist:
+    package_data={
+        'ldaprc': [],
+    },
     platforms=["any"],
     classifiers=[
         'Programming Language :: Python',

@@ -6,7 +6,15 @@
 
 ## Licensed under the terms of the MIT License, see LICENSE file.
 
-__version__ = '1.0a1'
-__author__ = 'Claudio Luck'
-__author_email__ = 'claudio.luck@gmail.com'
+import pytest
+
+
+#@pytest.mark.dummy
+#def test_test_0():
+#    assert 0
+
+
+@pytest.mark.dummy
+def test_test_1():
+    assert 1
 
