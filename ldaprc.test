@@ -1,0 +1,36 @@
+# ldap.conf(5)
+
+uri ldap://ldap.forumsys.com
+
+base    ou=mathematicians,dc=example,dc=com
+
+binddn cn=read-only-admin,dc=example,dc=com
+bindpw password
+
+##########################
+# (Plain vs) TLS
+
+# demand, allow; 'yes' is not an option for:
+TLS_REQCERT demand
+#TLS_CACERTDIR ca
+TLS_CACERT test-server-ca.pem
+#TLS_CERT test-client.pem
+#TLS_KEY test-client.pem
+
+## SASL Bind:
+# -- PKI
+#  > ldapsearch -Y EXTERNAL -ZZ ...
+#SASL_MECH EXTERNAL
+# (!) this uses the lower-level info,  thus the client certificate
+#     given in TLS_CERT/TLS_KEY
+# -- Password Digest
+#  > ldapsearch ???
+#SASL_MECH DIGEST-MD5
+#SASL_AUTHCID root@base
+# -- Kerberos GSSAPI
+#SASL_MECH GSSAPI
+SASL_REALM EXAMPLE.COM
+#SASL_AUTHCID uid
+
+#SASL_SECPROPS minssf=128,forwardsec
+
